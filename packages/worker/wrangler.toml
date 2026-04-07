@@ -12,8 +12,8 @@ bucket_name = "f2u-files"
 [[d1_databases]]
 binding = "D1_DATABASE"
 database_name = "f2u-db"
-database_id = ""
+database_id = "a240cea6-8b65-4190-9a12-98004a5b5e7c"
 
-[routes]
-pattern = "f2u.goclaw.sh/*"
+[[routes]]
+pattern = "f2u.goclaw.sh"
 custom_domain = true

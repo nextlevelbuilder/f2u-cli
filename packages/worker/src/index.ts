@@ -17,19 +17,19 @@ app.use('*', cors());
 
 app.get('/health', (c) => c.json({ status: 'ok', ts: new Date().toISOString() }));
 
-// File serving: public, registered before wildcard catch-all
-app.route('/', serveRoute);
-
-// --- Protected routes (auth required) ---
+// --- Protected routes (auth required) — registered BEFORE serve wildcard ---
 
 app.use('/upload', authMiddleware);
 app.route('/', uploadRoute);
 
 app.use('/files', authMiddleware);
-app.use('/info/:id', authMiddleware);
+app.use('/info/*', authMiddleware);
 app.use('/usage', authMiddleware);
 app.route('/', filesRoute);
 app.route('/', usageRoute);
+
+// File serving: public wildcard — MUST be last to avoid catching /info/:id, /files, etc.
+app.route('/', serveRoute);
 
 // DELETE /:id — auth applied inline to avoid conflicting with serve route
 app.delete('/:id', authMiddleware, async (c) => {
