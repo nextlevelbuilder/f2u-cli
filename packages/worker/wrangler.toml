@@ -1,0 +1,19 @@
+name = "f2u-worker"
+main = "src/index.ts"
+compatibility_date = "2024-12-01"
+
+[triggers]
+crons = ["* * * * *"]
+
+[[r2_buckets]]
+binding = "R2_BUCKET"
+bucket_name = "f2u-files"
+
+[[d1_databases]]
+binding = "D1_DATABASE"
+database_name = "f2u-db"
+database_id = ""
+
+[routes]
+pattern = "f2u.goclaw.sh/*"
+custom_domain = true

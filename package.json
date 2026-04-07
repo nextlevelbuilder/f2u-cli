@@ -1,0 +1,22 @@
+{
+  "name": "f2u-cli-monorepo",
+  "private": true,
+  "scripts": {
+    "dev:worker": "pnpm --filter @f2u/worker dev",
+    "dev:cli": "pnpm --filter f2u-cli dev",
+    "build": "pnpm -r build",
+    "build:cli": "pnpm --filter f2u-cli build",
+    "build:worker": "pnpm --filter @f2u/worker build",
+    "deploy": "pnpm --filter @f2u/worker deploy"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "workerd",
+      "sharp"
+    ]
+  }
+}
