@@ -1,5 +1,17 @@
 import { readFileSync } from 'node:fs';
-import { basename } from 'node:path';
+import { basename, extname } from 'node:path';
+
+// Common MIME types for files AI agents typically upload
+const MIME_TYPES: Record<string, string> = {
+  '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png',
+  '.gif': 'image/gif', '.webp': 'image/webp', '.svg': 'image/svg+xml',
+  '.pdf': 'application/pdf', '.json': 'application/json',
+  '.txt': 'text/plain', '.html': 'text/html', '.css': 'text/css',
+  '.js': 'text/javascript', '.ts': 'text/typescript',
+  '.csv': 'text/csv', '.xml': 'application/xml',
+  '.zip': 'application/zip', '.mp4': 'video/mp4', '.mp3': 'audio/mpeg',
+  '.wav': 'audio/wav', '.md': 'text/markdown',
+};
 import type { F2uConfig } from './config.js';
 
 // Response shapes matching Worker API exactly
@@ -75,7 +87,8 @@ export class ApiClient {
   async upload(filePath: string, ttl: string): Promise<UploadResult> {
     const fileBuffer = readFileSync(filePath);
     const filename = basename(filePath);
-    const blob = new Blob([fileBuffer]);
+    const mimeType = MIME_TYPES[extname(filePath).toLowerCase()] || 'application/octet-stream';
+    const blob = new Blob([fileBuffer], { type: mimeType });
 
     const form = new FormData();
     form.append('file', blob, filename);
