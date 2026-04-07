@@ -9,7 +9,7 @@
   "files": ["dist"],
   "scripts": {
     "dev": "tsx src/index.ts",
-    "build": "tsup src/index.ts --format esm --dts --clean",
+    "build": "tsup",
     "prepublishOnly": "pnpm build"
   },
   "publishConfig": {
