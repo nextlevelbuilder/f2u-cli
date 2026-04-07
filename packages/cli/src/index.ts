@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import { Command } from 'commander';
 import { makeAuthCommand } from './commands/auth-command.js';
 import { makeUploadCommand } from './commands/upload-command.js';
