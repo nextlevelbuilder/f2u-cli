@@ -4,9 +4,11 @@
   "description": "CLI tool for AI agents to upload temporary files to Cloudflare R2",
   "type": "module",
   "bin": {
-    "f2u": "./dist/index.js"
+    "f2u": "dist/index.js"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "tsx src/index.ts",
     "build": "tsup",
