@@ -9,8 +9,16 @@ const MIME_TYPES: Record<string, string> = {
   '.txt': 'text/plain', '.html': 'text/html', '.css': 'text/css',
   '.js': 'text/javascript', '.ts': 'text/typescript',
   '.csv': 'text/csv', '.xml': 'application/xml',
-  '.zip': 'application/zip', '.mp4': 'video/mp4', '.mp3': 'audio/mpeg',
-  '.wav': 'audio/wav', '.md': 'text/markdown',
+  '.zip': 'application/zip', '.gz': 'application/gzip', '.tar': 'application/x-tar',
+  '.md': 'text/markdown', '.yaml': 'text/yaml', '.yml': 'text/yaml',
+  // Audio
+  '.mp3': 'audio/mpeg', '.wav': 'audio/wav', '.ogg': 'audio/ogg',
+  '.flac': 'audio/flac', '.aac': 'audio/aac', '.m4a': 'audio/mp4',
+  '.wma': 'audio/x-ms-wma', '.opus': 'audio/opus',
+  // Video (.webm defaults to video — covers both audio/video use)
+  '.mp4': 'video/mp4', '.webm': 'video/webm', '.avi': 'video/x-msvideo',
+  '.mov': 'video/quicktime', '.mkv': 'video/x-matroska', '.flv': 'video/x-flv',
+  '.wmv': 'video/x-ms-wmv', '.m4v': 'video/mp4', '.3gp': 'video/3gpp',
 };
 import type { F2uConfig } from './config.js';
 
