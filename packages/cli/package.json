@@ -1,6 +1,6 @@
 {
   "name": "f2u-cli",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "CLI tool for AI agents to upload temporary files to Cloudflare R2",
   "type": "module",
   "bin": {
