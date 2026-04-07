@@ -55,7 +55,7 @@ serveRoute.get('/:id/:filename', async (c) => {
       'Content-Type': contentType,
       'Content-Length': String(record.size),
       'Cache-Control': 'public, max-age=60',
-      'Content-Disposition': `inline; filename="${record.filename}"`,
+      'Content-Disposition': `inline; filename="${record.filename.replace(/["\r\n\\]/g, '_')}"`,
     },
   });
 });

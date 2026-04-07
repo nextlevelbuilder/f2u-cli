@@ -30,6 +30,12 @@ uploadRoute.post('/upload', async (c) => {
   // At this point fileEntry is a Blob/File — Workers types use Blob, not File
   const file = fileEntry as unknown as { name: string; type: string; size: number; arrayBuffer: () => Promise<ArrayBuffer> };
 
+  // Enforce 100MB upload limit (Workers memory constraint)
+  const MAX_SIZE = 100 * 1024 * 1024; // 100MB
+  if (file.size > MAX_SIZE) {
+    return c.json({ error: `File too large. Maximum size is 100MB, got ${file.size} bytes` }, 413);
+  }
+
   const ttlRaw = (formData.get('ttl') as string | null) ?? '5m';
   const ttlSeconds = TTL_OPTIONS[ttlRaw];
   if (ttlSeconds === undefined) {

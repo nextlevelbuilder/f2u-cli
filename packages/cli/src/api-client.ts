@@ -2,14 +2,17 @@ import { readFileSync } from 'node:fs';
 import { basename } from 'node:path';
 import type { F2uConfig } from './config.js';
 
-// Response shapes returned by the Worker API
+// Response shapes matching Worker API exactly
 export interface UploadResult {
   id: string;
   url: string;
   filename: string;
   size: number;
+  content_type: string;
   ttl: string;
+  ttl_seconds: number;
   expires_at: string;
+  created_at: string;
 }
 
 export interface FileInfo {
@@ -17,20 +20,28 @@ export interface FileInfo {
   url: string;
   filename: string;
   size: number;
-  ttl: string;
+  content_type: string | null;
+  ttl_seconds: number;
+  ttl_remaining: number;
   expires_at: string;
-  ttl_remaining_seconds: number;
+  created_at: string;
+  deleted: boolean;
+  expired: boolean;
+}
+
+export interface FilesListResult {
+  files: FileInfo[];
+  count: number;
 }
 
 export interface DeleteResult {
-  success: boolean;
   id: string;
+  deleted: boolean;
 }
 
 export interface UsageResult {
-  file_count: number;
-  total_size_bytes: number;
-  total_size_human: string;
+  active: { files: number; bytes: number };
+  all_time: { files: number; bytes: number };
 }
 
 export class ApiClient {
@@ -79,11 +90,11 @@ export class ApiClient {
     return this.handleResponse<UploadResult>(response);
   }
 
-  async listFiles(): Promise<FileInfo[]> {
+  async listFiles(): Promise<FilesListResult> {
     const response = await fetch(`${this.baseUrl}/files`, {
       headers: this.headers,
     });
-    return this.handleResponse<FileInfo[]>(response);
+    return this.handleResponse<FilesListResult>(response);
   }
 
   async deleteFile(id: string): Promise<DeleteResult> {
