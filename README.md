@@ -144,10 +144,27 @@ Other file types default to `application/octet-stream`.
 
 ## Environment Variables
 
-Override config file with environment variables (useful for CI/CD):
+Credentials are resolved per-field with the following precedence (high → low):
+
+1. `process.env` — OS-level, shell-exported, or inline (`F2U_API_KEY=… f2u up …`)
+2. `.env.local` in current working directory
+3. `.env.${NODE_ENV}` in current working directory (e.g. `.env.production`)
+4. `.env` in current working directory
+5. `~/.config/f2u/config.json` (saved via `f2u auth`)
+
+Partial overrides are allowed — e.g. set `F2U_ENDPOINT` via env while keeping `F2U_API_KEY` in the config file.
 
 ```bash
+# Inline (CI/CD)
 F2U_ENDPOINT=https://f2u.goclaw.sh F2U_API_KEY=sk_xxx f2u up -f ./file.png
+
+# Shell export
+export F2U_API_KEY=sk_xxx
+f2u up -f ./file.png
+
+# Project-local .env file (auto-loaded from CWD)
+echo "F2U_API_KEY=sk_xxx" >> .env.local
+f2u up -f ./file.png
 ```
 
 | Variable | Description |
