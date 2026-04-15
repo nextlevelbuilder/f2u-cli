@@ -53,6 +53,9 @@ jobs:
       - name: Build CLI
         run: pnpm --filter f2u-cli build
 
+      - name: Copy root README into CLI package
+        run: cp README.md packages/cli/README.md
+
       - name: Publish to npm
         run: pnpm --filter f2u-cli publish --access public --no-git-checks
         env:
