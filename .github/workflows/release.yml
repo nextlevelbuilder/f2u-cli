@@ -1,0 +1,59 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+
+jobs:
+  # Step 1: release-please reads conventional commits on main and either
+  #   (a) opens/updates a "Release PR" bumping version + CHANGELOG, or
+  #   (b) on Release PR merge: creates tag + GitHub Release.
+  release-please:
+    runs-on: ubuntu-latest
+    outputs:
+      releases_created: ${{ steps.release.outputs.releases_created }}
+      cli_released: ${{ steps.release.outputs['packages/cli--release_created'] }}
+      cli_tag: ${{ steps.release.outputs['packages/cli--tag_name'] }}
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          config-file: .release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+  # Step 2: when a CLI release was just created, build & publish to npm.
+  publish-cli:
+    needs: release-please
+    if: needs.release-please.outputs.cli_released == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: cd packages/cli && npx tsc --noEmit
+
+      - name: Build CLI
+        run: pnpm --filter f2u-cli build
+
+      - name: Publish to npm
+        run: pnpm --filter f2u-cli publish --access public --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
