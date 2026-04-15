@@ -12,7 +12,8 @@
   "scripts": {
     "dev": "tsx src/index.ts",
     "build": "tsup",
-    "prepublishOnly": "pnpm build"
+    "copy:readme": "node -e \"require('fs').copyFileSync('../../README.md','README.md')\"",
+    "prepublishOnly": "pnpm copy:readme && pnpm build"
   },
   "publishConfig": {
     "access": "public"

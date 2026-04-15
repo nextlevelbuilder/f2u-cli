@@ -1,5 +1,7 @@
 node_modules/
 dist/
+# README in packages/cli is auto-copied from root at publish time
+packages/cli/README.md
 .wrangler/
 .dev.vars
 *.log

@@ -53,7 +53,18 @@ jobs:
       - name: Build CLI
         run: pnpm --filter f2u-cli build
 
+      - name: Copy root README into CLI package
+        run: cp README.md packages/cli/README.md
+
+      # Explicit .npmrc auth — pnpm in workspace context does not always pick up
+      # NODE_AUTH_TOKEN from setup-node, which previously caused 404 on PUT.
+      - name: Configure npm auth
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+          echo "registry=https://registry.npmjs.org/" >> ~/.npmrc
+          echo "always-auth=true" >> ~/.npmrc
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Publish to npm
         run: pnpm --filter f2u-cli publish --access public --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
