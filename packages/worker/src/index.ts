@@ -6,6 +6,9 @@ import uploadRoute from './routes/upload-route';
 import serveRoute from './routes/serve-route';
 import filesRoute from './routes/files-route';
 import usageRoute from './routes/usage-route';
+import oauthRoute from './routes/oauth-route';
+import dashboardApiRoute from './routes/dashboard-api-route';
+import webRoute from './routes/web-route';
 import { cleanupExpiredFiles } from './cron/cleanup-expired-files';
 
 const app = new Hono<{ Bindings: Env }>();
@@ -17,7 +20,16 @@ app.use('*', cors());
 
 app.get('/health', (c) => c.json({ status: 'ok', ts: new Date().toISOString() }));
 
-// --- Protected routes (auth required) — registered BEFORE serve wildcard ---
+// Web pages (login, dashboard, root) — single-segment paths, no conflict with serve wildcard
+app.route('/', webRoute);
+
+// GitHub OAuth flow (public)
+app.route('/', oauthRoute);
+
+// Dashboard API (session-gated inside the route handlers)
+app.route('/', dashboardApiRoute);
+
+// --- Protected file API (Bearer token) — registered BEFORE serve wildcard ---
 
 app.use('/upload', authMiddleware);
 app.route('/', uploadRoute);
@@ -33,9 +45,6 @@ app.route('/', serveRoute);
 
 // DELETE /:id — auth applied inline to avoid conflicting with serve route
 app.delete('/:id', authMiddleware, async (c) => {
-  // Delegate to filesRoute handler by re-using its logic inline
-  // (Hono sub-app DELETE handler is already defined in filesRoute but registering
-  //  it here ensures auth middleware fires before the wildcard serve GET)
   const { id } = c.req.param();
   const db = c.env.D1_DATABASE;
 

@@ -256,18 +256,41 @@ wrangler d1 create f2u-db
 cd packages/worker
 wrangler d1 execute f2u-db --file=src/db/schema.sql --remote
 
-# Set API key secret (enter your chosen key when prompted)
+# (Optional) Legacy single API key — for CLI access without the dashboard
 wrangler secret put API_KEY
+
+# GitHub OAuth — required for the web dashboard
+# 1. Create an OAuth App at https://github.com/settings/developers
+#    Authorization callback URL: https://your-domain.com/auth/github/callback
+# 2. Set the credentials as Worker secrets:
+wrangler secret put GITHUB_CLIENT_ID
+wrangler secret put GITHUB_CLIENT_SECRET
+
+# 3. (Strongly recommended) Restrict who can sign in. Edit wrangler.toml [vars]:
+#    ADMIN_GITHUB_USERS = "your-github-login,teammate-login"
+#    Leave empty to allow ANY GitHub user (not recommended for personal deploys).
 
 # Update custom domain in wrangler.toml (optional)
 # Edit [[routes]] pattern to your domain
+# Also update BASE_URL under [vars] to match.
 
 # Deploy
 wrangler deploy
 
 # Verify
 curl https://your-domain.com/health
+# Then visit https://your-domain.com/login in a browser
 ```
+
+### Web Dashboard
+
+Once deployed, visit `https://your-domain.com/login` to sign in with GitHub
+and manage API keys from the browser. Created keys are shown **once** —
+copy them immediately. Use them with the CLI via `f2u auth --key <KEY>`
+or as the `Authorization: Bearer <KEY>` header.
+
+The legacy `API_KEY` secret (if set) continues to work for backwards
+compatibility alongside dashboard-issued keys.
 
 ### Custom Domain
 

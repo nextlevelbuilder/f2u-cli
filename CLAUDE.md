@@ -36,13 +36,23 @@ pnpm deploy           # Deploy Worker to Cloudflare
 
 | Method | Path | Auth | Handler |
 |--------|------|------|---------|
-| POST | /upload | Yes | routes/upload-route.ts |
+| POST | /upload | Bearer | routes/upload-route.ts |
 | GET | /:id/:filename | No | routes/serve-route.ts |
-| GET | /files | Yes | routes/files-route.ts |
-| GET | /info/:id | Yes | routes/files-route.ts |
-| DELETE | /:id | Yes | index.ts (inline) |
-| GET | /usage | Yes | routes/usage-route.ts |
+| GET | /files | Bearer | routes/files-route.ts |
+| GET | /info/:id | Bearer | routes/files-route.ts |
+| DELETE | /:id | Bearer | index.ts (inline) |
+| GET | /usage | Bearer | routes/usage-route.ts |
 | GET | /health | No | index.ts |
+| GET | /login, /dashboard, / | Cookie | routes/web-route.ts |
+| GET | /auth/github, /auth/github/callback | No | routes/oauth-route.ts |
+| POST | /auth/logout | Cookie | routes/oauth-route.ts |
+| GET | /api/me | Cookie | routes/dashboard-api-route.ts |
+| GET/POST/DELETE | /api/keys[/:id] | Cookie | routes/dashboard-api-route.ts |
+
+**Auth modes:**
+- `Bearer`: API key (legacy `API_KEY` env OR sha-256 hashed key in D1 `api_keys`)
+- `Cookie`: HttpOnly `f2u_session` cookie set after GitHub OAuth login
+- `No`: Public
 
 ## CLI Commands
 

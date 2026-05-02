@@ -17,3 +17,12 @@ database_id = "a240cea6-8b65-4190-9a12-98004a5b5e7c"
 [[routes]]
 pattern = "f2u.goclaw.sh"
 custom_domain = true
+
+# Public (non-secret) vars. Configure via dashboard or `wrangler.toml`.
+# Secrets (GITHUB_CLIENT_SECRET, API_KEY) are set via `wrangler secret put`.
+[vars]
+BASE_URL = "https://f2u.goclaw.sh"
+# Comma-separated GitHub logins allowed to sign in. Empty = open to anyone.
+ADMIN_GITHUB_USERS = ""
+# GITHUB_CLIENT_ID is non-secret but easier to keep alongside the secret;
+# set via `wrangler secret put GITHUB_CLIENT_ID` or override here.
