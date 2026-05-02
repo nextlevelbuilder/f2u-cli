@@ -5,6 +5,8 @@ import { homedir } from 'node:os';
 const CONFIG_DIR = join(homedir(), '.config', 'f2u');
 const CONFIG_FILE = join(CONFIG_DIR, 'config.json');
 
+export const DEFAULT_ENDPOINT = 'https://f2u.goclaw.sh';
+
 export interface F2uConfig {
   endpoint: string;
   api_key: string;
@@ -95,15 +97,15 @@ export function requireConfig(): F2uConfig {
   const fileConfig = loadConfig();
 
   const endpoint =
-    process.env['F2U_ENDPOINT'] ?? fileEnv['F2U_ENDPOINT'] ?? fileConfig?.endpoint;
+    process.env['F2U_ENDPOINT'] ?? fileEnv['F2U_ENDPOINT'] ?? fileConfig?.endpoint ?? DEFAULT_ENDPOINT;
   const apiKey =
     process.env['F2U_API_KEY'] ?? fileEnv['F2U_API_KEY'] ?? fileConfig?.api_key;
 
-  if (!endpoint || !apiKey) {
+  if (!apiKey) {
     process.stderr.write(
       JSON.stringify({
         error:
-          'Not configured. Run: f2u auth --endpoint <url> --key <key>, or set F2U_ENDPOINT and F2U_API_KEY via env / .env file.',
+          'Not configured. Run: f2u auth --key <key>, or set F2U_API_KEY via env / .env file.',
       }) + '\n',
     );
     process.exit(1);

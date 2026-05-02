@@ -1,10 +1,10 @@
 import { Command } from 'commander';
-import { saveConfig } from '../config.js';
+import { saveConfig, DEFAULT_ENDPOINT } from '../config.js';
 
 export function makeAuthCommand(): Command {
   return new Command('auth')
     .description('Configure f2u with your Worker endpoint and API key')
-    .requiredOption('--endpoint <url>', 'Worker base URL (e.g. https://f2u.example.com)')
+    .option('--endpoint <url>', 'Worker base URL', DEFAULT_ENDPOINT)
     .requiredOption('--key <key>', 'API key for authentication')
     .action((opts: { endpoint: string; key: string }) => {
       const config = {
