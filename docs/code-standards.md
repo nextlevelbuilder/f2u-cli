@@ -47,6 +47,24 @@ Error responses:
 ## Dependencies
 
 - Minimal dependencies — only add what's strictly needed
-- Worker: `hono` only
+- Worker: `hono` only (crypto via Web Crypto / `crypto.subtle`, no extra deps)
 - CLI: `commander` only
 - Dev deps: TypeScript tooling (`tsup`, `tsx`, `wrangler`, types)
+
+## Module Layout (Worker)
+
+```
+src/
+├── index.ts                  Hono app composition + cron entry
+├── types.ts                  Env + DB row types
+├── db/schema.sql             D1 schema (additive — IF NOT EXISTS)
+├── cron/                     Scheduled handlers
+├── middleware/               Reusable middleware (auth, ...)
+├── lib/                      Pure helpers (crypto, cookies, sessions)
+├── routes/                   Hono sub-apps grouped by feature
+└── web/                      Embedded HTML page constants
+```
+
+Route registration order in `index.ts` matters: web/oauth/api routes
+must be mounted **before** the wildcard `/:id/:filename` serve route,
+or the wildcard will swallow them.

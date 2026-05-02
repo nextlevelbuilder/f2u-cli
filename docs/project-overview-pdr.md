@@ -14,9 +14,10 @@ AI agents (Claude, GPT, etc.) operating via MCP or CLI tools often need to share
 
 ## Solution
 
-Two-part system:
+Three-part system:
 1. **CLI tool** (`f2u`) — upload files, manage uploads, all JSON output
 2. **Cloudflare Worker** — API + file serving + cron cleanup
+3. **Web Dashboard** (served by the Worker) — GitHub OAuth login + API key management
 
 ## Tech Stack
 
@@ -32,9 +33,11 @@ Two-part system:
 ## Data Flow
 
 ```
-Upload:  CLI → POST /upload → Worker → R2 (file) + D1 (metadata) → JSON response
-Serve:   Browser/Agent → GET /:id/:filename → Worker → D1 check → R2 stream
-Cleanup: Cron (1min) → Worker → D1 query expired → R2 delete → D1 mark deleted
+Upload:    CLI → POST /upload → Worker → R2 (file) + D1 (metadata) → JSON response
+Serve:     Browser/Agent → GET /:id/:filename → Worker → D1 check → R2 stream
+Cleanup:   Cron (1min) → Worker → D1 query expired → R2 delete → D1 mark deleted
+Dashboard: Browser → /login → GitHub OAuth → /dashboard → /api/keys CRUD
+Auth:      CLI Bearer key → authMiddleware → D1 api_keys (sha-256 hash) lookup
 ```
 
 ## Domain
