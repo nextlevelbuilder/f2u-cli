@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.3.0](https://github.com/nextlevelbuilder/f2u-cli/compare/f2u-cli-v0.2.0...f2u-cli-v0.3.0) (2026-05-02)
+
+
+### Features
+
+* **cli:** default endpoint to https://f2u.goclaw.sh ([a1fcc98](https://github.com/nextlevelbuilder/f2u-cli/commit/a1fcc988ba9d576053f5d8b79c06122263145cc0))
+
+
+### Bug Fixes
+
+* **cli:** include README in published npm package ([0e39c77](https://github.com/nextlevelbuilder/f2u-cli/commit/0e39c775d980d166b6dd07b3e7fe0d8cb7c78ebb))
+* **cli:** include README in published npm package ([ccb3965](https://github.com/nextlevelbuilder/f2u-cli/commit/ccb39650d91bdc8d603a207e654d5c94c22cfa35))
+
 ## [0.2.0](https://github.com/nextlevelbuilder/f2u-cli/compare/f2u-cli-v0.1.4...f2u-cli-v0.2.0) (2026-04-15)
 
 
